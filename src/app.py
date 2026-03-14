@@ -139,19 +139,38 @@ if "証券コード" in companies.columns and "会社名" in companies.columns:
 
 st.subheader(f"{code} {company_name}".strip())
 
-# CompaniesからYahooURLを引いて表示
+# Companiesから各種URLを引いて表示
 yahoo_url = None
-if "YahooURL" in companies.columns:
-    comp = companies.copy()
+buffett_url = None
+irbank_url = None
+
+comp = companies.copy()
+if "証券コード" in comp.columns:
     comp["証券コード"] = pd.to_numeric(comp["証券コード"], errors="coerce").astype("Int64").astype(str)
     hit = comp[comp["証券コード"] == code]
+
     if len(hit) > 0:
-        yahoo_url = hit.iloc[0].get("YahooURL")
+        row = hit.iloc[0]
+        yahoo_url = row.get("YahooURL")
+        buffett_url = row.get("BuffettCodeURL")
+        irbank_url = row.get("IRBANKURL")
+
+link_items = []
 
 if isinstance(yahoo_url, str) and yahoo_url.strip():
-    st.markdown(f"🔗 Yahoo!ファイナンス: [リンクはこちら]({yahoo_url.strip()})")
+    link_items.append(f"🔗 Yahoo!ファイナンス: [リンクはこちら]({yahoo_url.strip()})")
+
+if isinstance(buffett_url, str) and buffett_url.strip():
+    link_items.append(f"🔗 BuffettCode: [リンクはこちら]({buffett_url.strip()})")
+
+if isinstance(irbank_url, str) and irbank_url.strip():
+    link_items.append(f"🔗 IR BANK: [リンクはこちら]({irbank_url.strip()})")
+
+if link_items:
+    for item in link_items:
+        st.markdown(item)
 else:
-    st.info("YahooURL が Companies に未設定です（Companiesに YahooURL 列を作って貼り付けてください）")
+    st.info("YahooURL / BuffettCodeURL / IRBANKURL が Companies に未設定です。")
 
 # ----------------------------
 # ユーティリティ
