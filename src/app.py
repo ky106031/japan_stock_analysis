@@ -20,7 +20,7 @@ mpl.rcParams["axes.unicode_minus"] = False  # マイナス記号が文字化け�
 st.set_page_config(page_title="Japan Stock DB Viewer", layout="wide")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = BASE_DIR / "data" / "raw"
 
 st.title("日本株データベース（Derivedビュー）")
 
